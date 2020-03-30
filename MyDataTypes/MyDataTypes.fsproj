@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Fundamentals.fs" />
+    <Compile Include="Airports.fs" />
+    <Compile Include="Currency.fs" />
+    <Compile Include="BusinessData.fs" />
+    <Compile Include="SampleAirports.fs" />
+  </ItemGroup>
+
+</Project>
