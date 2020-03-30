@@ -10,12 +10,11 @@ module Currency =
         { From: CurrencyName
           To: CurrencyName }
 
-    type CurrencyUpdate =
+    type Update =
         { CurrencyConversion: CurrencyConversion
           CurrencyExchangeRate: float<currencyExchangeRate> }
 
-    type CurrencyConversions =
-        Map<CurrencyConversion, float<currencyExchangeRate>>
+    type CurrencyConversions = Map<CurrencyConversion, float<currencyExchangeRate>>
 
-    let ApplyUpdate (conversions: CurrencyConversions) (update: CurrencyUpdate): CurrencyConversions =
+    let ApplyUpdate (conversions: CurrencyConversions) (update: Update): CurrencyConversions =
         conversions.Add(update.CurrencyConversion, update.CurrencyExchangeRate)
