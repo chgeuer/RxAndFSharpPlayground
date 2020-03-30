@@ -8,7 +8,7 @@ module Airport =
         { Latitude: float<degree>
           Longtitude: float<degree> }
 
-    type IATACode = IATACode of string
+    type IATACode = string
 
     type Airport =
         { IATACode: IATACode

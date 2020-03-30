@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using MyDataTypes;
+    using Newtonsoft.Json;
 
     class Program
     {
@@ -10,16 +11,26 @@
         {
             // _ = SampleAirports.Airports[IATACode.NewIATACode("DUS")].Coordinates.Latitude;
 
-            var updates = new (long, BusinessData.Update)[]
+            var csharpUpdates = new (long, BusinessData.Update)[]
             {
-                (10, BusinessData.Update.NewCurrencyUpdate(new Currency.Update(new Currency.CurrencyConversion(from: "EUR", to: "GBP"), 1.3)))
+                (10, BusinessData.Update.NewCurrencyUpdate(new Currency.Update("EUR-GBP", 1.3)))
             }
-            .Select(t => (UpdateOffset.NewUpdateOffset(t.Item1), t.Item2))
             .Select(TupleExtensions.ToTuple);
 
+            Console.WriteLine($"{BusinessData.Zero.ApplyUpdatesCSharp(csharpUpdates).ToJSON()}");
+            var d = JsonConvert.DeserializeObject<BusinessData.BusinessData>(SampleAirports.SampleData.ToJSON());
 
-            var bd = BusinessData.Zero.ApplyUpdatesCSharp(updates);
-            Console.WriteLine($"{bd}");
+            foreach (var (offset, update) in SampleAirports.UpdateSequence)
+            {
+                Console.WriteLine($"{offset}: {update.ToJSON()}");
+            }
+
+            Console.WriteLine($"{SampleAirports.SampleDataFromUpdateSequence.ApplyUpdatesCSharp(SampleAirports.UpdateSequence).ToJSON()}");
         }
+    }
+
+    public static class ME
+    {
+        public static string ToJSON<T>(this T t) => JsonConvert.SerializeObject(t);
     }
 }

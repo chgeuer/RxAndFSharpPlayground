@@ -1,3 +1,3 @@
 namespace MyDataTypes
 
-type UpdateOffset = UpdateOffset of int64
+type UpdateOffset = int64
