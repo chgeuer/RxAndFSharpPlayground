@@ -20,6 +20,8 @@
             int sum = 0;
             Action<int> incrementSum = x => sum += x;
 
+            // https://swimlanes.io/u/nGvokYYT3
+
             // disposing subscription means cancelling the subscription
             using IDisposable subscription = nums.Subscribe(
                 onNext: incrementSum,
@@ -114,6 +116,7 @@
         public static (IObservable<T>, T) And<T>(this IObservable<T> sequence, T t)
             => (sequence, t);
 
+        // https://rxmarbles.com/#merge
         public static IObservable<T> In<T>(this ValueTuple<IObservable<T>, T> tup, TimeSpan dueTime)
             => tup.Item1.Merge(tup.Item2.EmitIn(dueTime));
 
