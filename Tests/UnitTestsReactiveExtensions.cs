@@ -106,6 +106,41 @@
             Assert.True(800 < millis && millis < 1300);
             Assert.Equal(new[] { 9, 4, 1 }.ToArray(), results.ToArray());
         }
+
+
+        [Fact]
+        public async Task TestFunctionTimeBasedEmit1()
+        {
+            // demo multiple values firing at different times
+            IObservable<IEnumerable<int>> nums =
+                new[] { 1, 2, 3 }.EmitIn(TimeSpan.FromSeconds(2)).And(
+                    new[] { 4, 5 }).In(TimeSpan.FromSeconds(1)).And(
+                    new[] { 6, 7, 8 }).In(TimeSpan.FromSeconds(0.5));
+
+            IObservable<int> flattenedNumbers = nums
+                .SelectMany(i => i)
+                .TakeUntil(endTime: DateTimeOffset.Now.AddSeconds(1.5));
+
+            var results = new List<int>();
+
+            var tcs = new TaskCompletionSource<Exception>();
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            using var subscription = flattenedNumbers.Subscribe(
+                onNext: results.Add,
+                onCompleted: () => tcs.SetResult(null),
+                onError: ex => tcs.SetResult(ex));
+            Exception ex = await tcs.Task;
+
+            sw.Stop();
+            var millis = sw.ElapsedMilliseconds;
+
+            Assert.Null(ex);
+            Assert.True(1300 < millis && millis < 1700);
+            Assert.Equal(new[] { 6, 7, 8, 4, 5 }.ToArray(), results.ToArray());
+        }
     }
 
     public static class ReactiveExtensionExtensions
