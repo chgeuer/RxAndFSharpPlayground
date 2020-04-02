@@ -7,11 +7,11 @@ module SampleAirports =
 
     let UpdateSequence: (UpdateOffset * BusinessData.Update) list =
         [ 1L,
-          Update.CurrencyUpdate
+          Update.CurrencyConversionUpdate
               ({ CurrencyConversion = "GBP-EUR"
                  CurrencyExchangeRate = 1.2<currencyExchangeRate> })
           2L,
-          Update.CurrencyUpdate
+          Update.CurrencyConversionUpdate
               ({ CurrencyConversion = "EUR-GBP"
                  CurrencyExchangeRate = 0.8<currencyExchangeRate> })
           3L,
@@ -24,14 +24,11 @@ module SampleAirports =
                            Longtitude = 6.7666636<degree> } }))
           4L, Update.AirportUpdate(Airport.Update.AirportRemoved("DUS")) ]
 
-    let SampleDataFromUpdateSequence: BusinessData.BusinessData =
-        BusinessData.Zero
-        |> BusinessData.ApplyUpdates(UpdateSequence)
+    let SampleDataFromUpdateSequence: BusinessData.BusinessData option =
+        Some BusinessData.Zero |> BusinessData.ApplyUpdates(UpdateSequence)
 
     let SampleData: BusinessData.BusinessData =
-        { CurrencyConversions =
-              [ ("GBP-EUR", 1.2<currencyExchangeRate>) ]
-              |> Map.ofSeq
+        { CurrencyConversions = [ ("GBP-EUR", 1.2<currencyExchangeRate>) ] |> Map.ofSeq
           Airports =
               [ { IATACode = "LHR"
                   Name = "London Heathrow"
@@ -45,4 +42,4 @@ module SampleAirports =
                         Longtitude = 6.7666636<degree> } } ]
               |> Seq.map (fun ap -> ap.IATACode, ap)
               |> Map.ofSeq
-          Version = 2L }
+          Version = Some 2L }

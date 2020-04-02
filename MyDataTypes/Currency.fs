@@ -1,7 +1,7 @@
 namespace MyDataTypes
 
 module Currency =
-    type CurrencyConversion = string
+    type CurrencyConversion = string // "EUR-GBP"
 
     [<Measure>]
     type currencyExchangeRate
@@ -14,4 +14,8 @@ module Currency =
 
     let ApplyUpdate (conversions: CurrencyConversions) (update: Update): CurrencyConversions =
         conversions.Add(update.CurrencyConversion, update.CurrencyExchangeRate)
+
+
+
+
 // 'MyDataTypes.Currency+CurrencyConversion'. Create a TypeConverter to convert from the string to the key type object.
