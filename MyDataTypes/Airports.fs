@@ -10,10 +10,22 @@ module Airport =
 
     type IATACode = string
 
+    //open System
+
+    //type Person =
+    //    { EmployeeID: int }
+
+    //type AuditRecord =
+    //    { UpdatedAt: DateTimeOffset
+    //      UpdatedBy: Person }
+    
     type Airport =
         { IATACode: IATACode
           Name: string
-          Coordinates: Coordinates }
+          Coordinates: Coordinates
+          //Enabled: bool
+          //AuditRecord: AuditRecord
+          }
 
     type Airports = Map<IATACode, Airport>
 
