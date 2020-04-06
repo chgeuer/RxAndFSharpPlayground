@@ -23,15 +23,15 @@ module Airport =
         { IATACode: IATACode
           Name: string
           Coordinates: Coordinates
-          //Enabled: bool
+          Enabled: bool
           //AuditRecord: AuditRecord
           }
 
     type Airports = Map<IATACode, Airport>
 
     type Update =
-        | AirportAdded of Airport: Airport
-        | AirportRemoved of IATACode: IATACode
+        | AirportAdded of Airport: Airport     // Add new airport or replace/overwrite an existing one
+        | AirportRemoved of IATACode: IATACode // Delete an existing airport (or ignore the command if airport didn't exist)
         | AirportNameChanged of IATACode: IATACode * Name: string
 
     let UpdateAirportName (airports: Airports) (iata: IATACode) (name: string) =
@@ -41,8 +41,14 @@ module Airport =
             let updatedAirport = { airport with Name = name }
             airports.Add(updatedAirport.IATACode, updatedAirport)
 
+    let DisableAirport (airports: Airports) (iata: IATACode) =
+        match airports.TryFind iata with
+        | None -> airports
+        | Some airport ->
+            airports.Add(airport.IATACode, { airport with Enabled = false })
+
     let ApplyUpdate (airports: Airports) (update: Update): Airports =
         match update with
         | AirportAdded airport -> airports.Add(airport.IATACode, airport)
-        | AirportRemoved iataCode -> airports.Remove(iataCode)
+        | AirportRemoved iataCode -> DisableAirport airports iataCode
         | AirportNameChanged (iata, name) -> UpdateAirportName airports iata name

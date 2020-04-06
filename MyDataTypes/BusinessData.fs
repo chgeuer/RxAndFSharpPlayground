@@ -46,8 +46,8 @@ module BusinessData =
 
     // For the F# pipe operator (|>), the receiver needs to be the last argument
     let ApplyUpdates (updates: (UpdateOffset * Update) list) (businessData: BusinessData option): BusinessData option =
-        List.fold (fun data (offset, update) -> ApplyUpdate offset update data) (businessData) (updates)
-        
+       updates |> List.fold (fun data (offset, update) -> ApplyUpdate offset update data) (businessData) 
+
     // For the C# extension syntax, the receiver must be the first argument
     [<Extension>]
     let ApplyUpdatesCSharp (businessData: BusinessData) (updates: IEnumerable<UpdateOffset * Update>): BusinessData =
