@@ -54,15 +54,6 @@ namespace Tests
                     (6, ChangeAirportName("DUS", "Dusseldorf")),
             }.Select(TupleExtensions.ToTuple);
 
-
-            //var u = updates.Skip(2).First().Item2;
-            //var json = JsonConvert.SerializeObject(u);
-            //var u2 = JsonConvert.DeserializeObject<BusinessData.Update>(json);
-
-            //Assert.Equal(u, u2);
-            //Assert.Equal("gaga", json);
-
-
             var v0 = BusinessData.Zero;
             var v1 = v0.ApplyUpdatesCSharp(updates.Take(1));
             var v2 = v1.ApplyUpdatesCSharp(updates.Skip(1).Take(1));
@@ -74,7 +65,7 @@ namespace Tests
 
             Assert.Equal(FSharpOption<long>.None, v0.Version);
 
-            Assert.True(v1.CurrencyConversions.Count == 1);
+            Assert.Single(v1.CurrencyConversions);
             Assert.Equal(1.3, v1.CurrencyConversions["EUR-GBP"]);
             Assert.Equal(1, v1.Version);
 

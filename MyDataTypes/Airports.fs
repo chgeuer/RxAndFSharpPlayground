@@ -1,6 +1,7 @@
 namespace MyDataTypes
 
 module Airport =
+
     [<Measure>]
     type degree
 
@@ -9,6 +10,7 @@ module Airport =
           Longtitude: float<degree> }
 
     type IATACode = string
+
 
     //open System
 
@@ -30,7 +32,7 @@ module Airport =
     type Airports = Map<IATACode, Airport>
 
     type Update =
-        | AirportAdded of Airport: Airport     // Add new airport or replace/overwrite an existing one
+        | AirportPut of Airport: Airport     // Add new airport or replace/overwrite an existing one
         | AirportRemoved of IATACode: IATACode // Delete an existing airport (or ignore the command if airport didn't exist)
         | AirportNameChanged of IATACode: IATACode * Name: string
 
@@ -41,7 +43,7 @@ module Airport =
             let updatedAirport = { airport with Name = name }
             airports.Add(updatedAirport.IATACode, updatedAirport)
 
-    let DisableAirport (airports: Airports) (iata: IATACode) =
+    let DisableAirport (airports: Airports) (iata: IATACode): Airports =
         match airports.TryFind iata with
         | None -> airports
         | Some airport ->
@@ -49,6 +51,6 @@ module Airport =
 
     let ApplyUpdate (airports: Airports) (update: Update): Airports =
         match update with
-        | AirportAdded airport -> airports.Add(airport.IATACode, airport)
+        | AirportPut newAirport -> airports.Add(newAirport.IATACode, newAirport)
         | AirportRemoved iataCode -> DisableAirport airports iataCode
         | AirportNameChanged (iata, name) -> UpdateAirportName airports iata name
